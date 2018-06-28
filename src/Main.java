@@ -20,6 +20,7 @@ public class Main {
         String s = scan.next();
 
         if(s.equals("y")){
+            //clears table and reloads data
             loadJson();
         }
 
@@ -42,6 +43,8 @@ public class Main {
     }
 
     public static void loadJson() throws SQLException {
+
+        //read from the json
         List<Stock> stockList;
         try {
             ObjectMapper mapper = new ObjectMapper();
@@ -54,28 +57,37 @@ public class Main {
             return;
         }
 
+        //set the id
         int i = 0;
         for (Stock s : stockList) {
             s.setId(i);
             i++;
         }
 
+        //set up SQL queries
+        String clearTable = "TRUNCATE TABLE stocks";
         String insertSQL = "INSERT INTO stocks (id, symbol, price, volume, date) " + "VALUES (?, ?, ?, ?, ?)";
 
         try (
                 Connection conn = DBUtil.getConnection();
+                PreparedStatement clear = conn.prepareStatement(clearTable);
                 PreparedStatement stmt = conn.prepareStatement(insertSQL)
         ) {
-            for (Stock s : stockList) {
-                stmt.setInt(1, s.getId());
-                stmt.setString(2, s.getSymbol());
-                stmt.setDouble(3, s.getPrice());
-                stmt.setInt(4, s.getVolume());
-                stmt.setTimestamp(5, new java.sql.Timestamp(s.getDate().getTime()));
-               if(stmt.executeUpdate() != 1){
-                    //error thrown
-                    System.out.println("No rows were affected");
-               }
+            if(clear.executeUpdate() != 0){
+                //TRUNCATE TABLE expected to return 0 on success
+                System.out.println("Error clearing database");
+            } else {
+                for (Stock s : stockList) {
+                    stmt.setInt(1, s.getId());
+                    stmt.setString(2, s.getSymbol());
+                    stmt.setDouble(3, s.getPrice());
+                    stmt.setInt(4, s.getVolume());
+                    stmt.setTimestamp(5, new java.sql.Timestamp(s.getDate().getTime()));
+                    if (stmt.executeUpdate() != 1) {
+                        //error thrown
+                        System.out.println("No rows were affected");
+                    }
+                }
             }
         }
     }
@@ -153,9 +165,18 @@ public class Main {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            maxResults.close();
-            minResults.close();
-            volumeResults.close();
+            if (maxResults != null) {
+                maxResults.close();
+            }
+            if (minResults != null) {
+                minResults.close();
+            }
+            if (volumeResults != null) {
+                volumeResults.close();
+            }
+            if (closingResults != null) {
+                closingResults.close();
+            }
         }
 
     }
