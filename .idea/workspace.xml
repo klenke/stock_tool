@@ -17,11 +17,8 @@
       <file leaf-file-name="Main.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="379">
-              <caret line="119" column="36" lean-forward="true" selection-start-line="119" selection-start-column="36" selection-end-line="119" selection-end-column="36" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state relative-caret-position="-1184">
+              <caret line="2" lean-forward="true" selection-start-line="2" selection-end-line="2" />
             </state>
           </provider>
         </entry>
@@ -29,7 +26,7 @@
       <file leaf-file-name="week1-stocks.json" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/files/week1-stocks.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-64481" />
+            <state relative-caret-position="-25345" />
           </provider>
         </entry>
       </file>
@@ -76,7 +73,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" fullScreen="true">
+  <component name="ProjectFrameBounds" extendedState="6" fullScreen="true">
     <option name="x" value="45" />
     <option name="y" value="203" />
     <option name="width" value="1395" />
@@ -212,8 +209,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1440" height="900" extended-state="0" />
-    <editor active="true" />
+    <frame x="0" y="0" width="1440" height="900" extended-state="6" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -252,9 +248,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="495">
           <caret line="33" column="28" lean-forward="true" selection-start-line="33" selection-start-column="28" selection-end-line="33" selection-end-column="28" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -279,9 +272,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
           <caret line="4" selection-start-line="4" selection-end-line="4" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -300,11 +290,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/NetworkUtil.java" />
-    <entry file="file://$PROJECT_DIR$/files/week1-stocks.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-64481" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Stock.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-78">
@@ -322,13 +307,15 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/files/week1-stocks.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-25345" />
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="379">
-          <caret line="119" column="36" lean-forward="true" selection-start-line="119" selection-start-column="36" selection-end-line="119" selection-end-column="36" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state relative-caret-position="-1184">
+          <caret line="2" lean-forward="true" selection-start-line="2" selection-end-line="2" />
         </state>
       </provider>
     </entry>
@@ -401,7 +388,7 @@
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.31494254" />
+                <option value="0.2" />
               </list>
             </option>
           </splitter-proportions>

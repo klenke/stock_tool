@@ -3,6 +3,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
 import java.sql.*;
+import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
@@ -35,7 +36,7 @@ public class Main {
             System.out.print("\nWould you like to see information about another company or day? (y/n) ");
             s = scan.next();
             if(s.equals("n")){
-                System.out.println("\n\t\tThank you for using our Stock Aggregation Tool! Have a good one!");
+                System.out.println("\n\n\t\tThank you for using our Stock Aggregation Tool! Have a good one!\n");
                 break;
             }
         }
@@ -96,6 +97,8 @@ public class Main {
 
         //Set up date params
         String endOfTheDay = day.substring(0, day.length() - 1) + (Integer.parseInt(day.substring(day.length() - 1, day.length())) + 1);
+        String beginOfTheMonth = day.substring(0, 7) + "-00";
+        String endOfTheMonth = day.substring(0,7) + "-31";
 
         String maxSQL = "SELECT price " +
                 "FROM stocks WHERE price = " +
@@ -120,6 +123,8 @@ public class Main {
         ResultSet minResults = null;
         ResultSet volumeResults = null;
         ResultSet closingResults = null;
+        //format stock pricing
+        NumberFormat nf = NumberFormat.getCurrencyInstance();
 
         try (
                 Connection conn = DBUtil.getConnection();
@@ -149,18 +154,49 @@ public class Main {
             volumeResults = volumeStmt.executeQuery();
             closingResults = closingStmt.executeQuery();
 
+            System.out.println("\nDaily Stock Information:");
             if(maxResults.next()){
-                System.out.println("Maximum stock price for " + symbol + " on " + day + ": " + maxResults.getDouble("price"));
+                System.out.println("\tMaximum stock price for " + symbol + " on " + day + ":\t" + maxResults.getDouble("price"));
             }
             if(minResults.next()){
-                System.out.println("Minimum stock price for " + symbol + " on " + day + ": " + minResults.getDouble("price"));
+                System.out.println("\tMinimum stock price for " + symbol + " on " + day + ":\t" + minResults.getDouble("price"));
             }
             if(volumeResults.next()){
-                System.out.println("Total volume traded for " + symbol + " on " + day + ": " + volumeResults.getInt("volume"));
+                System.out.println("\tTotal volume traded for " + symbol + " on " + day + ":\t" + volumeResults.getInt("volume"));
             }
             if(closingResults.next()){
-                System.out.println("Closing price for " + symbol + " on " + day + ": " + closingResults.getDouble("price"));
+                System.out.println("\tClosing price for " + symbol + " on " + day + ":\t" + closingResults.getDouble("price"));
             }
+
+            //AGGREGATE FULL MONTH INFO
+            maxStmt.setString(1, symbol);
+            maxStmt.setString(2, beginOfTheMonth);
+            maxStmt.setString(3, endOfTheMonth);
+
+            minStmt.setString(1, symbol);
+            minStmt.setString(2, beginOfTheMonth);
+            minStmt.setString(3, endOfTheMonth);
+
+            volumeStmt.setString(1, symbol);
+            volumeStmt.setString(2, beginOfTheMonth);
+            volumeStmt.setString(3, endOfTheMonth);
+
+            maxResults = maxStmt.executeQuery();
+            minResults = minStmt.executeQuery();
+            volumeResults = volumeStmt.executeQuery();
+
+
+            System.out.println("\nMonthly Stock Information:");
+            if(maxResults.next()){
+                System.out.println("\tMaximum stock price for " + symbol + " in " + day.substring(0,7) + ":\t" + maxResults.getDouble("price"));
+            }
+            if(minResults.next()){
+                System.out.println("\tMinimum stock price for " + symbol + " in " + day.substring(0,7) + ":\t" + minResults.getDouble("price"));
+            }
+            if(volumeResults.next()){
+                System.out.println("\tTotal volume traded for " + symbol + " in " + day.substring(0,7) + ":\t" + volumeResults.getInt("volume"));
+            }
+
 
         } catch (SQLException e) {
             e.printStackTrace();
