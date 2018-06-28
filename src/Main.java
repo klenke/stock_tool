@@ -11,6 +11,7 @@ import java.util.Scanner;
 
 public class Main {
 
+    static boolean verbose = false;
 
     public static void main(String[] args) throws SQLException {
 
@@ -25,8 +26,16 @@ public class Main {
             loadJson();
         }
 
-
         while(true){
+            System.out.print("Would you like more verbose output? (y/n) ");
+            s = scan.next();
+            if(s.equals("y")){
+                verbose = true;
+            } else if (s.equals("n")){
+                verbose = false;
+            } else {
+                continue;
+            }
             System.out.print("Enter company symbol: ");
             symbol = scan.next();
             System.out.print("Enter date (yyyy-mm-dd): ");
@@ -100,13 +109,13 @@ public class Main {
         String beginOfTheMonth = day.substring(0, 7) + "-00";
         String endOfTheMonth = day.substring(0,7) + "-31";
 
-        String maxSQL = "SELECT price " +
+        String maxSQL = "SELECT price, date " +
                 "FROM stocks WHERE price = " +
                 "(SELECT MAX(price) " +
                 "FROM stocks " +
                 "WHERE symbol = ? AND date BETWEEN ? AND ?)";
 
-        String minSQL = "SELECT price " +
+        String minSQL = "SELECT price, date " +
                 "FROM stocks WHERE price = " +
                 "(SELECT MIN(price) " +
                 "FROM stocks " +
@@ -114,7 +123,7 @@ public class Main {
 
         String volumeSQL = "SELECT SUM(volume) AS volume FROM stocks WHERE (symbol = ?) AND (date BETWEEN ? AND ?)";
 
-        String closingSQL = "SELECT price FROM stocks " +
+        String closingSQL = "SELECT price, date FROM stocks " +
                 "WHERE symbol = ? AND date BETWEEN ? AND ? " +
                 "ORDER BY date DESC " +
                 "LIMIT 1";
@@ -154,18 +163,40 @@ public class Main {
             volumeResults = volumeStmt.executeQuery();
             closingResults = closingStmt.executeQuery();
 
-            System.out.println("\nDaily Stock Information:");
+            System.out.println("\nDaily Stock Information (" + day + "):");
             if(maxResults.next()){
-                System.out.println("\tMaximum stock price for " + symbol + " on " + day + ":\t" + maxResults.getDouble("price"));
+                if(verbose){
+                    System.out.print("\tMaximum stock price for " + symbol + " on " + day + ":\t" + maxResults.getDouble("price"));
+                    String d = maxResults.getString("date");
+                    System.out.println("\tat" + d.substring(10, d.length() - 3));
+                } else {
+                    System.out.println("\tMax:\t\t" + maxResults.getDouble("price"));
+                }
             }
             if(minResults.next()){
-                System.out.println("\tMinimum stock price for " + symbol + " on " + day + ":\t" + minResults.getDouble("price"));
+                if(verbose){
+                    System.out.print("\tMinimum stock price for " + symbol + " on " + day + ":\t" + minResults.getDouble("price"));
+                    String d = minResults.getString("date");
+                    System.out.println("\tat" + d.substring(10, d.length() - 3));
+                } else {
+                    System.out.println("\tMin:\t\t" + minResults.getDouble("price"));
+                }
             }
             if(volumeResults.next()){
-                System.out.println("\tTotal volume traded for " + symbol + " on " + day + ":\t" + volumeResults.getInt("volume"));
+                if(verbose){
+                    System.out.println("\tTotal volume traded for " + symbol + " on " + day + ":\t" + volumeResults.getInt("volume"));
+                } else {
+                    System.out.println("\tVolume:\t\t" + volumeResults.getInt("volume"));
+                }
+
             }
             if(closingResults.next()){
-                System.out.println("\tClosing price for " + symbol + " on " + day + ":\t" + closingResults.getDouble("price"));
+                if(verbose){
+                    System.out.println("\tClosing price for " + symbol + " on " + day + ":\t\t" + closingResults.getDouble("price"));
+                } else {
+                    System.out.println("\tClosing:\t" + closingResults.getDouble("price"));
+                }
+
             }
 
             //AGGREGATE FULL MONTH INFO
@@ -186,15 +217,32 @@ public class Main {
             volumeResults = volumeStmt.executeQuery();
 
 
-            System.out.println("\nMonthly Stock Information:");
+            System.out.println("\nMonthly Stock Information (" + day.substring(0,7) + "):");
             if(maxResults.next()){
-                System.out.println("\tMaximum stock price for " + symbol + " in " + day.substring(0,7) + ":\t" + maxResults.getDouble("price"));
+                if(verbose){
+                    System.out.print("\tMaximum stock price for " + symbol + " in " + day.substring(0,7) + ":\t" + maxResults.getDouble("price"));
+                    String d = maxResults.getString("date");
+                    System.out.println("\ton " + d.substring(5, 10) + " at " + d.substring(10, d.length()-3));
+                } else {
+                    System.out.println("\tMax:\t\t" + maxResults.getDouble("price"));
+                }
             }
             if(minResults.next()){
-                System.out.println("\tMinimum stock price for " + symbol + " in " + day.substring(0,7) + ":\t" + minResults.getDouble("price"));
+                if(verbose){
+                    System.out.print("\tMinimum stock price for " + symbol + " in " + day.substring(0,7) + ":\t" + minResults.getDouble("price"));
+                    String d = minResults.getString("date");
+                    System.out.println("\ton " + d.substring(5, 10) + " at " + d.substring(10, d.length()-3));
+                } else {
+                    System.out.println("\tMin:\t\t" + minResults.getDouble("price"));
+                }
             }
             if(volumeResults.next()){
-                System.out.println("\tTotal volume traded for " + symbol + " in " + day.substring(0,7) + ":\t" + volumeResults.getInt("volume"));
+                if(verbose){
+                    System.out.println("\tTotal volume traded for " + symbol + " in " + day.substring(0,7) + ":\t" + volumeResults.getInt("volume"));
+                } else {
+                    System.out.println("\tVolume:\t\t" + volumeResults.getInt("volume"));
+                }
+
             }
 
 
